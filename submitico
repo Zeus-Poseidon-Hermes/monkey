@@ -1,0 +1,85 @@
+var submitICO = function(req, res){
+	// let email = req.body.email;
+	let email = 'javed@yopmai.com';
+	let tokenName = req.body.token.name;
+	let toeknAddress = req.body.token.toeknAddress;
+	let tokenTicker = req.body.token.ticker;
+
+	let toeknValue = req.body.token.value;
+	let investorMinCap = req.body.investorMinCap;
+	let startTime = req.body.crowdsale[0].startTime;
+	let endTime = req.body.crowdsale[0].endTime;
+	let tokenRate = req.body.tokenRate;
+	let tokenDecimals = req.body.token.decimals;
+	let tokenSupply = req.body.crowdsale[0].supply;
+	let walletAddress = req.body.crowdsale[0].walletAddress;
+
+	if(email && tokenName){
+
+		let ICOOBJ = {
+				email  : email,
+				tokenName : tokenName,
+				tokenTicker : tokenTicker,
+				toeknAddress : [{ "contractAddress": toeknAddress }],
+				toeknValue: toeknValue,
+				investorMinCap: investorMinCap,
+				startTime : startTime,
+				endTime:endTime,
+				tokenRate: tokenRate,
+				tokenSupply: tokenSupply,
+				walletAddress : walletAddress
+			};
+
+		User.findOne({email : email}, function(err, ico){
+
+			if(err) res.status(HttpStatus.BAD_REQUEST).send({data: data, status: HttpStatus.BAD_REQUEST});
+			
+			if(!ico) {
+				res.status(HttpStatus.BAD_REQUEST).send({data: [],message : 'User Not found!.', status: HttpStatus.BAD_REQUEST});
+			}
+
+			if(ico){
+
+				ICO.findOne({email : email} , function(err, ico1){
+					if(err) res.status(HttpStatus.BAD_REQUEST).send({data: data, status: HttpStatus.BAD_REQUEST});
+					if(ico1){
+						ICO.update({ email : email },
+							{ $push : { 
+								        toeknAddress :  { "contractAddress": toeknAddress }
+							        } 
+							}, function(err, data){
+						  	if(err){
+						  		res.status(HttpStatus.BAD_REQUEST).send({data: data, status: HttpStatus.BAD_REQUEST});
+						  	}
+						  	if(data){
+						        res.status(HttpStatus.OK).send({data: data, message : 'ICO has been submitted successfully',status: HttpStatus.OK});
+						  	}
+						});
+					}
+
+					else{
+
+						ICO.create(ICOOBJ, function(err, ico2){
+								if(err) res.send({status : 400, message : 'Error in saved into DB'+err});
+								if(ico2){
+									res.send({status : 200, message : 'ICO has been submitted successfully'});
+								}
+						});
+					}
+				});	
+			}
+
+		 })
+			
+		// ICO.create(ICOOBJ, function(err, ico){
+
+		// 		if(err) res.send({status : 400, message : 'Error in saved into DB'});
+		// 		if(ico){
+		// 			res.send({status : 200, message : 'ICO has been submitted successfully'});
+		// 		}
+		// });
+    }
+	else{
+		res.send({status : 400, message : 'Please send required params'});
+	}
+}

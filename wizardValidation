@@ -1,0 +1,41 @@
+Validation rule for wizard:
+Notes: * as required on form
+ 	Without filling the valid details user can't able to move to next section
+
+step 1. 
+ a). company name and description are mandatory to fill [*]
+ b). social links are optional
+ c). teams, milestons are also optional
+ 
+step 2.
+ a). Token name must be string without allowing white space and special character [*]d
+ b). Token ticker must be varied 3-4 char [*]
+ c). decimal must be number upto 1 to 18 [*]
+
+ reserved tokens is optional, if fill then insure that address must be start with "0x" and value in number and dimenstiona must be selected [*]
+
+
+step 3.
+ a). Tier Name is mandatory, can have character, spaces and number [*]
+ b). Start date and end date is mandatory and start date < end date and tier1 start must be greater than the current time (date should be in epoch/unix time and passes as standard time) [*]
+ c). Rate must be a number [*]
+ d). supply must be a number [*]
+ e). Global Limit investor must be greater than 1 [*]
+
+ If new tiers are added then ensure that all the fields mentiond above must filled and the start date must be greater that the end date of tier1 [*]
+
+    ex.          tier 1     start date  : T1   end date: T2
+		tier 2      start date:  T3    end date: T4          
+		tier 3      start date: T5     end date: T6
+			
+		validation :     T1<T2<T3<T4<T5<T6        T1>now()+15min    T3>T2 + 15min    T5>T4+15min
+
+Step 4.
+ a). check the value of checkbox [*]
+ b). apply coupon functionality and deduct value of coupon accordingly from the payment amount which must be in dollars [*]
+ c). payment functionality for paypal [*] 
+ 
+
+ 	paying amount ($) + 0.5 (eth in $) < ethereum funds( $ )           [*]
+
+	 
